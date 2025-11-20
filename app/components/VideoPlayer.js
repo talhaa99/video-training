@@ -21,8 +21,10 @@ import {
   Fullscreen,
   FullscreenExit
 } from '@mui/icons-material'
+import { useLanguage } from '../contexts/LanguageContext'
 
 export default function VideoPlayer({ video, onComplete, onBack }) {
+  const { language, t } = useLanguage()
   console.log('VideoPlayer rendered with video:', video)
   const [isPlaying, setIsPlaying] = useState(true)
   const [currentTime, setCurrentTime] = useState(0)
@@ -197,7 +199,7 @@ export default function VideoPlayer({ video, onComplete, onBack }) {
             fontWeight: 600,
           }}
         >
-          Back to Training
+          {t('backToTraining')}
         </Button>
         
         <Box
@@ -233,13 +235,22 @@ export default function VideoPlayer({ video, onComplete, onBack }) {
               textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
               filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2))',
               position: 'relative',
-              zIndex: 1
+              zIndex: 1,
+              direction: language === 'ar' ? 'rtl' : 'ltr'
             }}
           >
             {video.title}
           </Typography>
         </Box>
-        <Typography variant="body1" sx={{ mb: 2, opacity: 0.9, color: 'black' }}>
+        <Typography 
+          variant="body1" 
+          sx={{ 
+            mb: 2, 
+            opacity: 0.9, 
+            color: 'black',
+            direction: language === 'ar' ? 'rtl' : 'ltr'
+          }}
+        >
           {video.description}
         </Typography>
         {/* <Chip
@@ -366,11 +377,11 @@ export default function VideoPlayer({ video, onComplete, onBack }) {
         <CardContent>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography variant="body2" sx={{ color: 'black' }}>
-              Video {video.id} of 2
+              {t('video')} {video.id} {t('of')} 2
             </Typography>
             {videoCompleted && (
               <Typography variant="body2" sx={{ fontWeight: 600, color: '#e31b23' }}>
-                ✓ Video Completed
+                {t('videoCompleted')}
               </Typography>
             )}
           </Box>

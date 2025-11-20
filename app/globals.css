@@ -51,9 +51,14 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', 'Segoe UI', 'Tahoma', 'Arial Unicode MS', sans-serif;
   touch-action: pan-x pan-y; /* <— key change */
   overscroll-behavior: none;
+}
+
+/* Arabic font support */
+[dir="rtl"] {
+  font-family: 'Segoe UI', 'Tahoma', 'Arial Unicode MS', 'Arabic Typesetting', 'Traditional Arabic', 'Simplified Arabic', 'Inter', sans-serif;
 }
 
 body {
@@ -310,20 +315,19 @@ a {
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, #e31b23 0%, #333092 50%, #e31b23 100%);
+  background: linear-gradient(135deg, #e31b23 0%, #2563eb 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-shadow: 0 0 30px rgba(227, 27, 35, 0.3);
-  animation: gradientShift 3s ease-in-out infinite;
 }
 
 @keyframes gradientShift {
   0%, 100% {
-    background: linear-gradient(135deg, #e31b23 0%, #333092 50%, #e31b23 100%);
+    background: linear-gradient(135deg, #e31b23 0%, #2563eb 100%);
   }
   50% {
-    background: linear-gradient(135deg, #333092 0%, #e31b23 50%, #333092 100%);
+    background: linear-gradient(135deg, #2563eb 0%, #e31b23 100%);
   }
 }
 
@@ -553,4 +557,167 @@ a {
 
 * {
   touch-action: pan-x pan-y;
+}
+
+/* RTL Support */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .MuiButton-startIcon {
+  margin-right: 0;
+  margin-left: 8px;
+}
+
+[dir="rtl"] .MuiButton-endIcon {
+  margin-left: 0;
+  margin-right: 8px;
+}
+
+[dir="rtl"] .MuiChip-icon {
+  margin-right: 0;
+  margin-left: -4px;
+}
+
+[dir="rtl"] .MuiFormControlLabel-label {
+  margin-right: 0;
+  margin-left: 8px;
+}
+
+/* RTL adjustments for flex containers */
+[dir="rtl"] .MuiBox-root[style*="flex"] {
+  flex-direction: row-reverse;
+}
+
+/* RTL text alignment */
+[dir="rtl"] {
+  text-align: right;
+}
+
+[dir="rtl"] .MuiTypography-root {
+  text-align: inherit;
+}
+
+/* RTL menu positioning */
+[dir="rtl"] .MuiMenu-paper {
+  direction: rtl;
+}
+
+/* RTL card content */
+[dir="rtl"] .MuiCardContent-root {
+  text-align: right;
+}
+
+/* RTL grid adjustments */
+[dir="rtl"] .MuiGrid-container {
+  direction: rtl;
+}
+
+/* RTL list items */
+[dir="rtl"] .MuiListItem-root {
+  flex-direction: row-reverse;
+}
+
+/* RTL icon positioning */
+[dir="rtl"] .MuiListItemIcon-root {
+  margin-right: 0;
+  margin-left: 16px;
+  min-width: auto;
+}
+
+/* RTL input fields */
+[dir="rtl"] input,
+[dir="rtl"] textarea {
+  direction: rtl;
+  text-align: right;
+}
+
+/* RTL select dropdowns */
+[dir="rtl"] .MuiSelect-select {
+  text-align: right;
+  padding-right: 14px;
+  padding-left: 32px;
+}
+
+/* RTL radio buttons */
+[dir="rtl"] .MuiRadio-root {
+  margin-right: 0;
+  margin-left: 9px;
+}
+
+/* RTL checkbox */
+[dir="rtl"] .MuiCheckbox-root {
+  margin-right: 0;
+  margin-left: 9px;
+}
+
+/* RTL chip spacing */
+[dir="rtl"] .MuiChip-root {
+  direction: rtl;
+}
+
+/* RTL alert */
+[dir="rtl"] .MuiAlert-root {
+  direction: rtl;
+  text-align: right;
+}
+
+/* RTL dialog */
+[dir="rtl"] .MuiDialog-paper {
+  direction: rtl;
+}
+
+/* RTL tooltip */
+[dir="rtl"] .MuiTooltip-tooltip {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Responsive Arabic text */
+[dir="rtl"] .MuiTypography-root {
+  word-break: keep-all;
+  word-wrap: break-word;
+}
+
+/* Responsive Arabic buttons */
+[dir="rtl"] .MuiButton-root {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 600px) {
+  [dir="rtl"] .MuiTypography-h2 {
+    font-size: 1.75rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  [dir="rtl"] .MuiTypography-h4 {
+    font-size: 1.25rem !important;
+  }
+  
+  [dir="rtl"] .MuiTypography-h5 {
+    font-size: 1.1rem !important;
+  }
+  
+  [dir="rtl"] .MuiButton-root {
+    font-size: 0.875rem !important;
+    padding: 8px 16px !important;
+  }
+}
+
+/* Arabic text rendering optimization */
+[dir="rtl"] {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure Arabic text doesn't break awkwardly */
+[dir="rtl"] p,
+[dir="rtl"] span,
+[dir="rtl"] div {
+  word-spacing: normal;
+  letter-spacing: normal;
 }

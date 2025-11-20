@@ -34,6 +34,7 @@
 // }
 import { Inter } from 'next/font/google'
 import CustomThemeProvider from './components/ThemeProvider'
+import { LanguageProvider } from './contexts/LanguageContext'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -59,9 +60,11 @@ export default function RootLayout({ children }) {
         <meta name="msapplication-tap-highlight" content="no" />
       </head>
       <body className={inter.className}>
-        <CustomThemeProvider>
-          {children}
-        </CustomThemeProvider>
+        <LanguageProvider>
+          <CustomThemeProvider>
+            {children}
+          </CustomThemeProvider>
+        </LanguageProvider>
       </body>
     </html>
   )

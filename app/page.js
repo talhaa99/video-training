@@ -19,13 +19,18 @@ import QuizComponent from './components/QuizComponent'
 import ResultsScreen from './components/ResultsScreen'
 import LandingPage from './components/LandingPage'
 import AnimatedBackground from './components/AnimatedBackground'
-import { trainingData } from '../data/trainingData'
+import { getTrainingData } from '../data/trainingData'
+import { useLanguage } from './contexts/LanguageContext'
 
 export default function Home() {
+  const { language, t } = useLanguage()
   const [currentView, setCurrentView] = useState('landing') // landing, home, video, quiz, results
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
   const [quizResults, setQuizResults] = useState([])
   const [currentQuizAnswers, setCurrentQuizAnswers] = useState({})
+  
+  // Get training data based on current language
+  const trainingData = getTrainingData(language)
 
   console.log('Current view:', currentView, 'Current video index:', currentVideoIndex)
 
@@ -85,6 +90,14 @@ export default function Home() {
     return trainingData.quizzes.find(quiz => quiz.videoId === trainingData.videos[currentVideoIndex].id)
   }
 
+  // Update training data when language changes
+  useEffect(() => {
+    // Reset view when language changes to ensure data is refreshed
+    if (currentView !== 'landing') {
+      // Keep current view but data will be updated via getTrainingData
+    }
+  }, [language])
+
   const renderHomeView = () => (
     <Container maxWidth="lg" sx={{ py: 4, width: '100%' }}>
       <AnimatedBackground />
@@ -106,7 +119,7 @@ export default function Home() {
             fontWeight: 600,
           }}
         >
-          Back to Home
+          {t('backToHome')}
         </Button>
       </Box>
       <Box 
@@ -128,9 +141,10 @@ export default function Home() {
             fontWeight: 700,
             letterSpacing: '-0.02em',
             mb: 2,
+            direction: language === 'ar' ? 'rtl' : 'ltr'
           }}
         >
-           Enhance your skills with our comprehensive video training program
+           {t('enhanceSkills')}
         </Typography>
         {/* <Typography 
           variant="h5" 
@@ -267,7 +281,7 @@ export default function Home() {
                     <PlayArrow sx={{ fontSize: 50, color: 'white', ml: 0.5 }} />
                   </Box>
                   <Typography variant="h6" sx={{ color: 'white', fontWeight: 600 }}>
-                    Start Training
+                    {t('startTrainingButton')}
                   </Typography>
                 </Box>
                 {/* <Chip
@@ -332,7 +346,7 @@ export default function Home() {
                       fontWeight: 700,
                     }}
                   >
-                    Start Training
+                    {t('startTrainingButton')}
                   </Button>
                 </Box>
               </CardContent>
@@ -355,7 +369,7 @@ export default function Home() {
             className="gradient-text"
             sx={{ fontWeight: 600, mb: 3 }}
           >
-            Training Progress
+            {t('trainingProgress')}
           </Typography>
           <Box sx={{ position: 'relative', mb: 2 }}>
             <LinearProgress 
@@ -382,7 +396,7 @@ export default function Home() {
               color: '#e2e8f0',
             }}
           >
-            Completed: {quizResults.length} of {trainingData.videos.length} modules
+            {t('completed')}: {quizResults.length} {t('of')} {trainingData.videos.length} {t('modules')}
           </Typography>
         </Box>
       )}

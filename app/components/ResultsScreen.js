@@ -31,17 +31,20 @@ import {
   Close
 } from '@mui/icons-material'
 import AnimatedBackground from './AnimatedBackground'
-import { trainingData } from '../../data/trainingData'
+import { getTrainingData } from '../../data/trainingData'
+import { useLanguage } from '../contexts/LanguageContext'
 // Removed canvas-confetti to avoid SSR issues - using CSS animations instead
 
 export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
+  const { language, t } = useLanguage()
+  const trainingData = getTrainingData(language)
   const [showConfetti, setShowConfetti] = useState(false)
   const [showAnswers, setShowAnswers] = useState(false)
 
   // Get the most recent result (current video)
   const currentResult = results[results.length - 1]
   const currentVideo = currentResult ? {
-    title: currentResult.videoIndex === 0 ? "Firefighting Safety Training" : "CPR Training",
+    title: currentResult.videoIndex === 0 ? t('firefightingTitle') : t('cprTitle'),
     index: currentResult.videoIndex + 1
   } : null
 
@@ -76,10 +79,10 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
   }
 
   const getScoreMessage = () => {
-    if (isPerfectScore) return "Perfect! Outstanding performance!"
-    if (isExcellentScore) return "Excellent! Great job!"
-    if (isGoodScore) return "Good work! Keep it up!"
-    return "Keep practicing to improve your score!"
+    if (isPerfectScore) return t('perfect')
+    if (isExcellentScore) return t('excellent')
+    if (isGoodScore) return t('goodWork')
+    return t('keepPracticing')
   }
 
   const getScoreIcon = () => {
@@ -89,6 +92,7 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
   }
 
   const isLastVideo = currentResult && currentResult.videoIndex === 1 // 0-based index, so 1 means second video
+  const allModulesCompleted = results.length >= trainingData.videos.length
 
   return (
     <Box sx={{
@@ -160,9 +164,10 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
             mb: 1,
             fontSize: '2rem',
             animation: 'pulse 2s infinite',
+            direction: language === 'ar' ? 'rtl' : 'ltr'
           }}
         >
-          {currentVideo ? `${currentVideo.title} Complete!` : 'Training Complete!'}
+          {currentVideo ? `${currentVideo.title} ${t('trainingComplete')}` : t('trainingComplete')}
         </Typography>
         <Typography 
           variant="body1" 
@@ -171,9 +176,10 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
             mb: 2,
             opacity: 0.9,
             fontWeight: 400,
+            direction: language === 'ar' ? 'rtl' : 'ltr'
           }}
         >
-          {currentVideo ? `Congratulations on completing ${currentVideo.title}!` : 'Congratulations on finishing the training program'}
+          {currentVideo ? `${t('congratulations')} ${currentVideo.title}!` : t('congratulationsFinish')}
         </Typography>
       </Box>
 
@@ -228,9 +234,10 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
             sx={{ 
               mb: 2,
               opacity: 0.8,
+              direction: language === 'ar' ? 'rtl' : 'ltr'
             }}
           >
-            You answered {score} out of {totalQuestions} questions correctly
+            {t('youAnswered')} {score} {t('outOf')} {totalQuestions} {t('questionsCorrectly')}
           </Typography>
 
           <LinearProgress
@@ -253,7 +260,7 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
           />
 
           <Chip
-            label={`${score}/${totalQuestions} Correct`}
+            label={`${score}/${totalQuestions} ${t('correct')}`}
             size="medium"
             sx={{ 
               fontSize: '1rem',
@@ -369,10 +376,11 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
             gap: 1,
             fontWeight: 600,
             mb: 1,
+            direction: language === 'ar' ? 'rtl' : 'ltr'
           }}
         >
           <Assessment />
-          Performance Summary
+          {t('performanceSummary')}
         </Typography>
         
         <Grid container spacing={2}>
@@ -446,7 +454,7 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
                     fontSize: '0.8rem'
                   }}
                 >
-                  Modules Completed
+                  {t('modulesCompleted')}
                 </Typography>
               </Box>
             </Box>
@@ -521,7 +529,7 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
                     fontSize: '0.8rem'
                   }}
                 >
-                  Questions Correct
+                  {t('questionsCorrect')}
                 </Typography>
               </Box>
             </Box>
@@ -596,7 +604,7 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
                     fontSize: '0.8rem'
                   }}
                 >
-                  Total Questions
+                  {t('totalQuestions')}
                 </Typography>
               </Box>
             </Box>
@@ -629,7 +637,7 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
                fontWeight: 700,
              }}
            >
-             Next Training
+             {t('nextTraining')}
            </Button>
         )}
         
@@ -647,47 +655,49 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
             fontWeight: 700,
           }}
         >
-          Show Correct Answers
+          {t('showCorrectAnswers')}
         </Button>
         
-        <Button
-          variant="outlined"
-          size="medium"
-          onClick={onBackToHome}
-          startIcon={<Home />}
-          className="crystal-button crystal-button-secondary"
-          sx={{ 
-            minWidth: 180,
-            fontSize: '1rem',
-            padding: '12px 24px',
-            borderRadius: '12px',
-            fontWeight: 700,
-          }}
-        >
-          {isLastVideo ? 'Complete Training' : 'Back to Home'}
-        </Button>
+        {(!isLastVideo || !allModulesCompleted) && (
+          <Button
+            variant="outlined"
+            size="medium"
+            onClick={onBackToHome}
+            startIcon={<Home />}
+            className="crystal-button crystal-button-secondary"
+            sx={{ 
+              minWidth: 180,
+              fontSize: '1rem',
+              padding: '12px 24px',
+              borderRadius: '12px',
+              fontWeight: 700,
+            }}
+          >
+            {isLastVideo ? t('completeTraining') : t('backToHome')}
+          </Button>
+        )}
       </Box>
 
       {isPerfectScore && (
         <Alert severity="success" sx={{ mt: 3 }}>
-          <Typography variant="h6">
-            🎉 Perfect Score! You've mastered all the training materials!
+          <Typography variant="h6" sx={{ direction: language === 'ar' ? 'rtl' : 'ltr' }}>
+            {t('perfectScore')}
           </Typography>
         </Alert>
       )}
 
       {isExcellentScore && !isPerfectScore && (
         <Alert severity="info" sx={{ mt: 3 }}>
-          <Typography variant="h6">
-            🌟 Excellent performance! You're well on your way to mastery!
+          <Typography variant="h6" sx={{ direction: language === 'ar' ? 'rtl' : 'ltr' }}>
+            {t('excellentPerformance')}
           </Typography>
         </Alert>
       )}
 
       {!isExcellentScore && (
         <Alert severity="warning" sx={{ mt: 3 }}>
-          <Typography variant="h6">
-            📚 Good effort! Consider reviewing the video to improve your understanding.
+          <Typography variant="h6" sx={{ direction: language === 'ar' ? 'rtl' : 'ltr' }}>
+            {t('goodEffort')}
           </Typography>
         </Alert>
       )}
@@ -745,8 +755,8 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
                 borderBottom: '1px solid #e0e0e0'
               }}
             >
-              <Typography variant="h5" sx={{ fontWeight: 600 }}>
-                Correct Answers Review
+              <Typography variant="h5" sx={{ fontWeight: 600, direction: language === 'ar' ? 'rtl' : 'ltr' }}>
+                {t('correctAnswersReview')}
               </Typography>
               <Button
                 onClick={() => setShowAnswers(false)}
@@ -765,7 +775,7 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
                   }
                 }}
               >
-                Close
+                {t('close')}
               </Button>
             </Box>
             
@@ -774,7 +784,7 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
                 const quiz = trainingData.quizzes.find(q => q.videoId === result.videoIndex + 1)
                 if (!quiz) return null
                 
-                const moduleTitle = result.videoIndex === 0 ? "Firefighting Safety Training" : "CPR Training"
+                const moduleTitle = result.videoIndex === 0 ? t('firefightingTitle') : t('cprTitle')
                 const moduleScore = Math.round((result.score / result.totalQuestions) * 100)
                 
                 return (
@@ -801,8 +811,8 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
                       }}
                     >
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 1 }}>
-                        <Typography variant="h5" sx={{ color: 'white', fontWeight: 700 }}>
-                          Module {result.videoIndex + 1}: {moduleTitle}
+                        <Typography variant="h5" sx={{ color: 'white', fontWeight: 700, direction: language === 'ar' ? 'rtl' : 'ltr' }}>
+                          {t('module')} {result.videoIndex + 1}: {moduleTitle}
                         </Typography>
                         <Chip
                           label={`${moduleScore}%`}
@@ -814,8 +824,8 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
                           }}
                         />
                       </Box>
-                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.9)', mt: 1, position: 'relative', zIndex: 1 }}>
-                        {result.score} out of {result.totalQuestions} questions correct
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.9)', mt: 1, position: 'relative', zIndex: 1, direction: language === 'ar' ? 'rtl' : 'ltr' }}>
+                        {result.score} {t('outOf')} {result.totalQuestions} {t('questionsCorrectly')}
                       </Typography>
                     </Box>
                     
@@ -827,8 +837,8 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
                       
                       return (
                         <Card key={question.id} sx={{ mb: 2, p: 2 }}>
-                          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                            Question {index + 1}: {question.question}
+                          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, direction: language === 'ar' ? 'rtl' : 'ltr' }}>
+                            {t('question')} {index + 1}: {question.question}
                           </Typography>
                           
                           <Box sx={{ mb: 2 }}>
@@ -879,7 +889,7 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
                                   >
                                     {alphabetLabel}
                                   </Box>
-                                  <Typography variant="body1" sx={{ flex: 1 }}>
+                                  <Typography variant="body1" sx={{ flex: 1, direction: language === 'ar' ? 'rtl' : 'ltr' }}>
                                     {option}
                                   </Typography>
                                   {isCorrectOption && (
@@ -893,9 +903,9 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
                             })}
                           </Box>
                           
-                          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', direction: language === 'ar' ? 'rtl' : 'ltr' }}>
                             <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                              Your Answer: 
+                              {t('yourAnswer')} 
                             </Typography>
                             {userAnswer ? (
                               <Chip
@@ -908,7 +918,7 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
                               />
                             ) : (
                               <Chip
-                                label="Not answered"
+                                label={t('notAnswered')}
                                 sx={{
                                   backgroundColor: '#6b7280',
                                   color: 'white',
@@ -916,8 +926,8 @@ export default function ResultsScreen({ results, onNextVideo, onBackToHome }) {
                                 }}
                               />
                             )}
-                            <Typography variant="body2" sx={{ fontWeight: 600, ml: 1 }}>
-                              Correct Answer: 
+                            <Typography variant="body2" sx={{ fontWeight: 600, ml: language === 'ar' ? 0 : 1, mr: language === 'ar' ? 1 : 0 }}>
+                              {t('correctAnswer')} 
                             </Typography>
                             <Chip
                               label={String.fromCharCode(65 + question.correctAnswer)}

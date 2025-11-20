@@ -23,8 +23,10 @@ import {
   CheckCircle,
   Quiz
 } from '@mui/icons-material'
+import { useLanguage } from '../contexts/LanguageContext'
 
 export default function QuizComponent({ quiz, onComplete, onBack }) {
+  const { language, t } = useLanguage()
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState({})
   const [selectedAnswer, setSelectedAnswer] = useState('')
@@ -123,7 +125,7 @@ export default function QuizComponent({ quiz, onComplete, onBack }) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Alert severity="error">
-          No questions available for this quiz.
+          {t('noQuestionsAvailable')}
         </Alert>
       </Container>
     )
@@ -150,7 +152,7 @@ export default function QuizComponent({ quiz, onComplete, onBack }) {
             fontSize: { xs: '0.9rem', sm: '1rem' }
           }}
         >
-          Back
+          {t('backToHome')}
         </Button>
         
         <Box sx={{ 
@@ -201,10 +203,11 @@ export default function QuizComponent({ quiz, onComplete, onBack }) {
                 position: 'relative',
                 zIndex: 1,
                 fontSize: { xs: '1.2rem', sm: '1.5rem' },
-                textAlign: 'center'
+                textAlign: 'center',
+                direction: language === 'ar' ? 'rtl' : 'ltr'
               }}
             >
-              Quiz Assessment
+              {t('quizAssessment')}
             </Typography>
           </Box>
           
@@ -212,15 +215,18 @@ export default function QuizComponent({ quiz, onComplete, onBack }) {
           <Box sx={{ 
             display: 'flex', 
             alignItems: 'center', 
-            justifyContent: { xs: 'center', sm: 'flex-end' },
+            justifyContent: { xs: 'center', sm: language === 'ar' ? 'flex-start' : 'flex-end' },
             gap: { xs: 1, sm: 2 },
             width: '100%',
             maxWidth: { xs: '100%', sm: '500px' },
-            marginLeft: { xs: 0, sm: 'auto' }
+            marginLeft: { xs: 0, sm: language === 'ar' ? 0 : 'auto' },
+            marginRight: { xs: 0, sm: language === 'ar' ? 'auto' : 0 },
+            flexDirection: { xs: 'row', sm: language === 'ar' ? 'row-reverse' : 'row' },
+            flexWrap: 'wrap'
           }}>
             <Chip
               icon={<Quiz />}
-              label={`Question ${currentQuestionIndex + 1} of ${quiz.questions.length}`}
+              label={`${t('question')} ${currentQuestionIndex + 1} ${t('of')} ${quiz.questions.length}`}
               sx={{
                 background: 'linear-gradient(135deg, #e31b23 0%, #333092 100%)',
                 color: 'white',
@@ -228,8 +234,34 @@ export default function QuizComponent({ quiz, onComplete, onBack }) {
                 boxShadow: '0 6px 20px rgba(227, 27, 35, 0.4)',
                 borderRadius: '20px',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
-                fontSize: { xs: '0.8rem', sm: '0.9rem' },
-                height: { xs: '32px', sm: '36px' }
+                fontSize: { 
+                  xs: language === 'ar' ? '0.7rem' : '0.8rem', 
+                  sm: language === 'ar' ? '0.85rem' : '0.9rem',
+                  md: language === 'ar' ? '0.9rem' : '1rem'
+                },
+                height: { 
+                  xs: language === 'ar' ? '28px' : '32px', 
+                  sm: language === 'ar' ? '32px' : '36px',
+                  md: '36px'
+                },
+                padding: { 
+                  xs: language === 'ar' ? '4px 8px' : '4px 12px', 
+                  sm: language === 'ar' ? '4px 10px' : '4px 16px'
+                },
+                maxWidth: { xs: language === 'ar' ? '140px' : '160px', sm: '100%' },
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                '& .MuiChip-label': {
+                  padding: { xs: language === 'ar' ? '0 4px' : '0 8px', sm: '0 8px' },
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  maxWidth: '100%'
+                },
+                '& .MuiChip-icon': {
+                  marginLeft: language === 'ar' ? { xs: '4px', sm: '8px' } : 0,
+                  marginRight: language === 'ar' ? 0 : { xs: '4px', sm: '8px' }
+                }
               }}
             />
             <Chip
@@ -247,7 +279,8 @@ export default function QuizComponent({ quiz, onComplete, onBack }) {
                 borderRadius: '20px',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
                 fontSize: { xs: '0.8rem', sm: '0.9rem' },
-                height: { xs: '32px', sm: '36px' }
+                height: { xs: '32px', sm: '36px' },
+                minWidth: { xs: '60px', sm: '70px' }
               }}
             />
           </Box>
@@ -285,7 +318,8 @@ export default function QuizComponent({ quiz, onComplete, onBack }) {
               fontWeight: 600,
               color: '#0f172a',
               fontSize: { xs: '1.1rem', sm: '1.5rem' },
-              lineHeight: { xs: 1.4, sm: 1.2 }
+              lineHeight: { xs: 1.4, sm: 1.2 },
+              direction: language === 'ar' ? 'rtl' : 'ltr'
             }}
           >
             {currentQuestion.question}
@@ -356,7 +390,16 @@ export default function QuizComponent({ quiz, onComplete, onBack }) {
                         />
                       }
                       label={
-                        <Typography variant="body1" sx={{ fontWeight: 500, ml: 1, fontSize: { xs: '0.9rem', sm: '1rem' } }}>
+                        <Typography 
+                          variant="body1" 
+                          sx={{ 
+                            fontWeight: 500, 
+                            ml: language === 'ar' ? 0 : 1,
+                            mr: language === 'ar' ? 1 : 0,
+                            fontSize: { xs: '0.9rem', sm: '1rem' },
+                            direction: language === 'ar' ? 'rtl' : 'ltr'
+                          }}
+                        >
                           {option}
                         </Typography>
                       }
@@ -397,7 +440,7 @@ export default function QuizComponent({ quiz, onComplete, onBack }) {
             padding: { xs: '10px 20px', sm: '12px 24px' }
           }}
         >
-          Previous
+          {t('previous')}
         </Button>
 
         <Box sx={{ 
@@ -434,13 +477,13 @@ export default function QuizComponent({ quiz, onComplete, onBack }) {
             padding: { xs: '10px 20px', sm: '12px 24px' }
           }}
         >
-          {isLastQuestion ? 'Complete Quiz' : 'Next Question'}
+          {isLastQuestion ? t('completeQuiz') : t('nextQuestion')}
         </Button>
       </Box>
 
       {timeLeft <= 10 && timeLeft > 0 && (
         <Alert severity="warning" sx={{ mt: 2 }}>
-          Time running out! {timeLeft} seconds remaining.
+          {t('timeRunningOut')} {timeLeft} {t('secondsRemaining')}
         </Alert>
       )}
     </Container>
