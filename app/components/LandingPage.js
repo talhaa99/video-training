@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   Box,
   Container,
@@ -32,17 +32,8 @@ import { useLanguage } from '../contexts/LanguageContext'
 export default function LandingPage({ onStartTraining }) {
   const [isHovered, setIsHovered] = useState(false)
   const { language, changeLanguage, t } = useLanguage()
-  // Show language selection if language is not set
-  const [showLanguageSelection, setShowLanguageSelection] = useState(!language)
-  
-  // Update showLanguageSelection when language changes
-  useEffect(() => {
-    if (language) {
-      setShowLanguageSelection(false)
-    } else {
-      setShowLanguageSelection(true)
-    }
-  }, [language])
+  // Always show language selection first on each visit
+  const [showLanguageSelection, setShowLanguageSelection] = useState(true)
   
   // Language selection translations
   const languageSelectionTexts = {
