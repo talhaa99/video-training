@@ -1,7 +1,19 @@
 import { translations } from './translations'
 
 const getTrainingData = (lang = 'en') => {
-  const t = (key) => translations[lang]?.[key] || translations['en'][key] || key
+  const currentLang = lang === 'ar' ? 'ar' : 'en'
+  const t = (key) => translations[currentLang]?.[key] || translations['en'][key] || key
+
+  const videoSources = {
+    fire: {
+      en: '/videos/fire-english.mp4',
+      ar: '/videos/fire-arabic.mp4'
+    },
+    cpr: {
+      en: '/videos/cpr-english.mp4',
+      ar: '/videos/cpr-arabic.mp4'
+    }
+  }
 
   return {
     videos: [
@@ -9,17 +21,17 @@ const getTrainingData = (lang = 'en') => {
         id: 1,
         title: t('firefightingTitle'),
         description: t('firefightingDescription'),
-        videoUrl: "/videos/firefighting-training.mp4",
+        videoUrl: videoSources.fire[currentLang],
         duration: "12:45",
-        thumbnail: "/videos/firefighting-training.mp4"
+        thumbnail: videoSources.fire[currentLang]
       },
       {
         id: 2,
         title: t('cprTitle'),
         description: t('cprDescription'),
-        videoUrl: "/videos/cpr-training.mp4",
+        videoUrl: videoSources.cpr[currentLang],
         duration: "18:30",
-        thumbnail: "/videos/cpr-training.mp4"
+        thumbnail: videoSources.cpr[currentLang]
       }
     ],
     quizzes: [
