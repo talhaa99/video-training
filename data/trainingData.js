@@ -14,7 +14,6 @@ const getTrainingData = (lang = 'en') => {
       ar: '/videos/cpr-arabic.mp4'
     }
   }
-
   return {
     videos: [
       {
